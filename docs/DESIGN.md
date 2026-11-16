@@ -9,8 +9,9 @@ human and easy to talk to**, while the craft of the site itself proves the studi
 
 ## 1. Positioning and the 5-second test
 
-> FM Digital AI helps Central Florida businesses answer every call and message, fill their
-> calendars and get found first — in English and Spanish — without hiring more staff.
+> We help clinics, restaurants and local businesses across Central Florida answer every call
+> and message, fill their calendars, and get found first — so the business keeps growing.
+> In English and in Spanish.
 
 The home page must answer three questions before a visitor scrolls:
 
@@ -128,9 +129,17 @@ Motion is used to make the page feel considered and expensive, never to delay re
   streamed Blob behind a progress ring with the poster painting first, the displayed
   `currentTime` lerped toward the scroll target and seeks gated so they never overlap. Four
   caption beats crossfade in the calm left third over warm scrims, then the stage settles on
-  the evolved-café frame with the H1 + CTA (copy from `copy.ts`). Transform/opacity only.
+  the evolved-café frame with the H1 + lead + CTA (copy from `copy.ts`). Transform/opacity only.
   Phones, tablets and reduced-motion visitors get a static settle frame and never fetch the
   video.
+- **Hero settle subcopy (exact):** "We help clinics, restaurants and local businesses across
+  Central Florida answer every call and message, fill their calendars, and get found first —
+  so the business keeps growing. In English and in Spanish." (ES equivalent in `copy.ts`,
+  `home.hero.lead`).
+- **Hero activity card:** a glass card under the caption crossfades four states keyed to the
+  beats — phone "Incoming call…" with a pulsing clay ring, check "Answered · English &
+  Spanish" with animated voice bars, calendar "Table booked", spark "AI handling follow-ups".
+  Labels live in `copy.ts` (`home.hero.activity`); line icons in the brand palette.
 - **Word reveals and emphasis sweep:** section titles split into words that stagger in on
   entering the viewport; the accent phrase renders italic clay/cream with an underline that
   draws in behind it. A visually hidden plain-text copy keeps every heading correct for screen

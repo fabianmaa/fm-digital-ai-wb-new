@@ -8,10 +8,10 @@ Microsoft Edge 156 (headless, via the DevTools protocol). Local site: `npm run d
 
 | Check | Command | Result |
 | --- | --- | --- |
-| Production build | `npm run build` | ✅ `index.html` 0.78 kB · CSS 42.16 kB (8.63 kB gzip) · JS 465.49 kB (147.48 kB gzip) |
+| Production build | `npm run build` | ✅ `index.html` 0.78 kB · CSS 43.24 kB (8.85 kB gzip) · JS 470.35 kB (148.37 kB gzip) |
 | TypeScript | `npx tsc --noEmit -p tsconfig.app.json` | ✅ 0 errors |
 | ESLint | `npm run lint` | ✅ 0 errors, 4 dev-only fast-refresh warnings |
-| Copy guard | `node scripts/check-copy.mjs` | ✅ 555 localized strings · 0 empty · 0 jargon hits |
+| Copy guard | `node scripts/check-copy.mjs` | ✅ 560 localized strings · 0 empty · 0 jargon hits |
 
 ## 2. Route audit (automated, real browser)
 
@@ -120,7 +120,7 @@ The `/es/contact` page renders the same component with Spanish copy:
 - English is the default for every path without `/es`.
 - Switching language changes the path, the `<html lang>` attribute, the document title, meta
   description, canonical, hreflang pair and every visible string.
-- The copy guard found **0 empty translations** and **0 jargon hits** across 555 strings.
+- The copy guard found **0 empty translations** and **0 jargon hits** across 560 strings.
 - Six strings are identical in both languages by design: “Blog” (`footer.blog`), “Legal”
   (`footer.legalTitle`, `sitemap.legalTitle`), “Cookies”, the `404` label and the name
   placeholder `María González`. No brand name is in this list — brand names are identical too,
@@ -156,6 +156,13 @@ The `/es/contact` page renders the same component with Spanish copy:
 - The hero is a scroll-scrubbed video (desktop, no reduced motion): a 74 KB WebP poster paints
   first, then the scrub video streams progressively behind a progress ring; mobile, tablet and
   reduced-motion visitors get a static settle frame and never fetch the video.
+- The hero settle subcopy is the exact approved EN line: "We help clinics, restaurants and
+  local businesses across Central Florida answer every call and message, fill their calendars,
+  and get found first — so the business keeps growing. In English and in Spanish." (ES in
+  `copy.ts`, `home.hero.lead`).
+- The hero activity card crossfades four glass states (phone / answered / table booked / AI
+  follow-ups) with line icons and a pulsing ring + voice-bar micro-animations; labels live in
+  `copy.ts` (`home.hero.activity`) and the card is hidden on the static fallback and mobile.
 - Content images are WebP at 800/1600 px; 800 px versions are 12–98 KB.
 - No third-party scripts, no analytics, no cookie banner, no runtime font CDN.
 - The build is a single JS chunk (145 KB gzip); route-level code splitting is the obvious next

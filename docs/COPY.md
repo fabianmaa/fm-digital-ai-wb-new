@@ -441,8 +441,8 @@ Language architecture: English is the default at `/`; Spanish is the same pages 
 
 **hero.lead**
 
-- **EN:** We help clinics, restaurants and local businesses across Central Florida answer every call and message, fill their calendars, and get found first — in English and in Spanish.
-- **ES:** Ayudamos a clínicas, restaurantes y negocios locales de toda Florida Central a contestar cada llamada y cada mensaje, llenar su agenda y aparecer primero — en inglés y en español.
+- **EN:** We help clinics, restaurants and local businesses across Central Florida answer every call and message, fill their calendars, and get found first — so the business keeps growing. In English and in Spanish.
+- **ES:** Ayudamos a clínicas, restaurantes y negocios locales en Florida Central a contestar cada llamada y mensaje, llenar su agenda y aparecer primero en las búsquedas — para que el negocio siga creciendo. En inglés y en español.
 
 **hero.cta**
 
@@ -524,6 +524,26 @@ Language architecture: English is the default at `/`; Spanish is the same pages 
 - **EN:** Behind it all: AI answering, booking, and following up — while you run your business.
 - **ES:** Detrás de todo: la IA contesta, agenda y hace seguimiento — mientras tú atiendes tu negocio.
 
+**hero.activity[1]**
+
+- **EN:** Incoming call…
+- **ES:** Llamada entrante…
+
+**hero.activity[2]**
+
+- **EN:** Answered · English & Spanish
+- **ES:** Contestado · Inglés y español
+
+**hero.activity[3]**
+
+- **EN:** Table booked
+- **ES:** Mesa reservada
+
+**hero.activity[4]**
+
+- **EN:** AI handling follow-ups
+- **ES:** La IA gestiona los seguimientos
+
 **pain.eyebrow**
 
 - **EN:** Sound familiar?
@@ -538,6 +558,11 @@ Language architecture: English is the default at `/`; Spanish is the same pages 
 
 - **EN:** Most lost business does not announce itself. It quietly books somewhere else.
 - **ES:** La mayoría de los clientes perdidos no avisan. Simplemente reservan en otro lado.
+
+**pain.after**
+
+- **EN:** It quietly books with you.
+- **ES:** Simplemente reservan contigo.
 
 **pain.items[1].title**
 

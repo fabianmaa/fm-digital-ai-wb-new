@@ -56,14 +56,9 @@ function useHeroScrub() {
   return state;
 }
 
-// Scroll-driven "activity" card states, keyed to the caption beats. The EN wording is the
-// owner's verbatim text; the ES wording is provisional and flagged for approval.
-const ACTIVITY: { icon: LucideIcon; en: string; es: string }[] = [
-  { icon: Phone, en: "Incoming call…", es: "Llamada entrante…" },
-  { icon: Check, en: "Answered · English & Spanish", es: "Contestado · Inglés y español" },
-  { icon: Calendar, en: "Table booked", es: "Mesa reservada" },
-  { icon: Sparkles, en: "AI handling follow-ups", es: "La IA gestiona los seguimientos" },
-];
+// Icons for the scroll-driven "activity" card, keyed to the caption beats (the labels live
+// in copy.ts as home.hero.activity so the copy guard covers them).
+const ACTIVITY_ICONS: LucideIcon[] = [Phone, Check, Calendar, Sparkles];
 
 function VoiceBars() {
   return (
@@ -76,9 +71,8 @@ function VoiceBars() {
 }
 
 function ActivityCard({ state }: { state: number }) {
-  const { lang } = useLanguage();
-  const item = ACTIVITY[state];
-  const Icon = item.icon;
+  const { t } = useLanguage();
+  const Icon = ACTIVITY_ICONS[state];
   return (
     <div className="inline-flex items-center gap-3 rounded-2xl glass-panel px-4 py-2.5 shadow-lift">
       <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-forest text-cream">
@@ -91,7 +85,7 @@ function ActivityCard({ state }: { state: number }) {
         <Icon className="relative h-4 w-4" aria-hidden="true" />
       </span>
       {state === 1 ? <VoiceBars /> : null}
-      <span className="whitespace-nowrap text-sm font-semibold text-forest">{lang === "es" ? item.es : item.en}</span>
+      <span className="whitespace-nowrap text-sm font-semibold text-forest">{t.home.hero.activity[state]}</span>
     </div>
   );
 }

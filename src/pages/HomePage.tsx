@@ -1,5 +1,7 @@
 import { Check } from "lucide-react";
-import { CITIES } from "../constants/site";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { CITIES, SERVICE_IDS, SERVICE_IMAGES } from "../constants/site";
 import { useLanguage } from "../i18n/LanguageProvider";
 import { PageMeta } from "../i18n/PageMeta";
 import { AuditForm } from "../components/AuditForm";
@@ -16,7 +18,20 @@ import {
   TextLink,
   cx,
 } from "../components/ui";
-import { FaqSection, ServiceCards } from "../components/sections";
+import { FaqSection } from "../components/sections";
+
+function useDesktop() {
+  const [desktop, setDesktop] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => setDesktop(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return desktop;
+}
 
 function Hero() {
   return <ScrollVideoHero />;
@@ -44,26 +59,80 @@ function CityMarquee() {
   );
 }
 
+function ProblemSwap({ before, after, reduce }: { before: string; after: string; reduce: boolean | null }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "start 0.4"] });
+  const strikeX = useTransform(scrollYProgress, [0, 1], [0, 1], { clamp: true });
+  const afterO = useTransform(scrollYProgress, [0.15, 0.7], [0, 1], { clamp: true });
+  const afterY = useTransform(scrollYProgress, [0.15, 0.7], [14, 0], { clamp: true });
+
+  if (reduce) {
+    return (
+      <div className="mt-6">
+        <p className="relative inline-block text-lg leading-relaxed text-muted">
+          {before}
+          <span className="absolute left-0 top-1/2 h-[2px] w-full bg-clay" aria-hidden="true" />
+        </p>
+        <p className="mt-2 text-lg font-semibold leading-relaxed text-forest">{after}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div ref={ref} className="mt-6">
+      <p className="relative text-lg leading-relaxed text-muted">
+        <span className="relative">
+          {before}
+          <motion.span
+            className="absolute left-0 top-1/2 h-[2px] w-full bg-clay"
+            style={{ transformOrigin: "left", scaleX: strikeX }}
+            aria-hidden="true"
+          />
+        </span>
+      </p>
+      <motion.p className="mt-2 text-lg font-semibold leading-relaxed text-forest" style={{ opacity: afterO, y: afterY }}>
+        {after}
+      </motion.p>
+    </div>
+  );
+}
+
 function Pain() {
   const { t } = useLanguage();
+  const reduce = useReducedMotion();
+  const introParts = t.home.pain.intro.split(". ");
+  const lead = `${introParts[0]}.`;
+  const before = introParts.slice(1).join(". ");
   return (
     <Section tone="paper">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div>
-            <SectionHeading eyebrow={t.home.pain.eyebrow} title={t.home.pain.title} intro={t.home.pain.intro} />
+            <SectionHeading eyebrow={t.home.pain.eyebrow} title={t.home.pain.title} intro={lead} />
+            <ProblemSwap before={before} after={t.home.pain.after} reduce={reduce} />
             <p className="mt-8 max-w-sm border-l-2 border-clay pl-5 text-[1.02rem] font-medium leading-relaxed text-forest">
               {t.home.pain.closing}
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {t.home.pain.items.map((item, index) => (
-              <Reveal key={item.title} delay={index * 0.05}>
-                <article className="h-full rounded-3xl border border-line bg-cream p-6 transition-shadow duration-300 hover:shadow-soft">
-                  <span className="font-display text-sm italic text-clay/70">0{index + 1}</span>
-                  <h3 className="mt-4 text-xl leading-snug">{item.title}</h3>
-                  <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
-                </article>
+              <Reveal key={item.title} delay={index * 0.05} className="h-full">
+                <div className="float-card h-full" style={{ animationDelay: `${index * 0.9}s` }}>
+                  <article className="group relative h-full overflow-hidden rounded-3xl border border-line bg-cream p-6 transition-all duration-500 ease-editorial hover:-translate-y-1 hover:shadow-soft">
+                    <motion.span
+                      className="absolute left-0 top-0 h-[3px] w-full bg-clay/60"
+                      style={{ transformOrigin: "left" }}
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: index * 0.05 }}
+                      aria-hidden="true"
+                    />
+                    <span className="font-display text-sm italic text-clay/70">0{index + 1}</span>
+                    <h3 className="mt-4 text-xl leading-snug">{item.title}</h3>
+                    <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
+                  </article>
+                </div>
               </Reveal>
             ))}
           </div>
@@ -75,9 +144,19 @@ function Pain() {
 
 function Services() {
   const { t } = useLanguage();
+  const reduce = useReducedMotion();
+  const desktop = useDesktop();
+  const [active, setActive] = useState(0);
+  const scrub = desktop && !reduce;
+  const items = t.home.services.items;
+
   return (
     <Section tone="forest" className="grain">
-      <Container>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="ambient-orb ambient-orb--glow-sage -left-24 top-8 h-[26rem] w-[26rem]" />
+        <div className="ambient-orb ambient-orb--glow-clay -right-20 bottom-0 h-[24rem] w-[24rem]" />
+      </div>
+      <Container className="relative">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <SectionHeading
             eyebrow={t.home.services.eyebrow}
@@ -89,8 +168,95 @@ function Services() {
             {t.common.seeAllServices}
           </TextLink>
         </div>
-        <div className="mt-12">
-          <ServiceCards tone="dark" />
+
+        <div className="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div>
+            {items.map((item, index) => {
+              const row = (
+                <div className="flex items-start gap-5 sm:gap-6">
+                  <span className="font-display text-4xl italic leading-none text-clay/70 sm:text-5xl">
+                    {item.number}
+                  </span>
+                  <div>
+                    <h3 className="text-display-sm text-cream">{item.title}</h3>
+                    <p className="mt-2 max-w-md leading-relaxed text-cream/70">{item.body}</p>
+                    <ul className="mt-3 space-y-1.5">
+                      {item.bullets.map((bullet) => (
+                        <li key={bullet} className="flex items-start gap-2.5 text-sm text-cream/60">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-cream/50" aria-hidden="true" />
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+              return scrub ? (
+                <motion.div
+                  key={item.key}
+                  onViewportEnter={() => setActive(index)}
+                  viewport={{ margin: "-40% 0px -40% 0px" }}
+                  className={cx(
+                    "-mx-4 rounded-2xl border-t border-cream/15 px-4 py-12 transition-colors duration-500 first:border-t-0 first:pt-0 lg:py-16",
+                    active === index ? "bg-[rgba(96,168,140,0.12)]" : "bg-transparent",
+                  )}
+                >
+                  {row}
+                </motion.div>
+              ) : (
+                <div
+                  key={item.key}
+                  className={cx(
+                    "-mx-4 rounded-2xl border-t border-cream/15 px-4 py-12 transition-colors duration-500 first:border-t-0 first:pt-0 lg:py-16",
+                    active === index ? "bg-[rgba(96,168,140,0.12)]" : "bg-transparent",
+                  )}
+                >
+                  {row}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="relative">
+            {scrub ? (
+              <div className="lg:sticky lg:top-28">
+                <div className="relative aspect-[4/5]">
+                  <div className="arch absolute inset-0 overflow-hidden border border-cream/20">
+                    {SERVICE_IDS.map((id, index) => (
+                      <motion.div
+                        key={id}
+                        className="absolute inset-0"
+                        initial={false}
+                        animate={{ opacity: active === index ? 1 : 0 }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <Photo
+                          name={SERVICE_IMAGES[id]}
+                          alt={items[index].title}
+                          className="h-full w-full"
+                          imgClassName="object-cover"
+                          sizes="(min-width: 1024px) 480px, 90vw"
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                  <div className="arch absolute -left-3 -top-3 h-full w-full border border-cream/30" aria-hidden="true" />
+                </div>
+              </div>
+            ) : (
+              <div className="mx-auto max-w-[440px]">
+                <div className="arch relative aspect-[4/5] overflow-hidden border border-cream/20">
+                  <Photo
+                    name={SERVICE_IMAGES.agents}
+                    alt={items[0].title}
+                    className="h-full w-full"
+                    imgClassName="object-cover"
+                    sizes="90vw"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </Container>
     </Section>
@@ -111,8 +277,25 @@ function Process() {
         <div className="mt-14 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {t.home.process.steps.map((step, index) => (
             <Reveal key={step.number} delay={index * 0.07}>
-              <div className="relative border-t border-forest/25 pt-6">
-                <span className="font-display text-4xl italic leading-none text-clay/50">{step.number}</span>
+              <div className="relative pt-6">
+                <motion.span
+                  className="absolute left-0 top-0 h-px w-full bg-clay/50"
+                  style={{ transformOrigin: "left" }}
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
+                  aria-hidden="true"
+                />
+                <motion.span
+                  className="block font-display text-4xl italic leading-none text-clay/50"
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 + 0.15 }}
+                >
+                  {step.number}
+                </motion.span>
                 <h3 className="mt-4 text-xl leading-snug">{step.title}</h3>
                 <p className="mt-2.5 text-sm leading-relaxed text-muted">{step.body}</p>
               </div>

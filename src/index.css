@@ -262,6 +262,17 @@
   animation-duration: 32s;
 }
 
+/* Light glow orbs for the dark forest sections. */
+.ambient-orb--glow-sage {
+  background: radial-gradient(circle at 50% 50%, rgba(96, 168, 140, 0.22), transparent 70%);
+}
+
+.ambient-orb--glow-clay {
+  background: radial-gradient(circle at 40% 40%, rgba(198, 98, 64, 0.18), transparent 68%);
+  animation-delay: -7s;
+  animation-duration: 30s;
+}
+
 @keyframes fm-drift {
   from {
     transform: translate3d(-2%, -2%, 0) scale(1);

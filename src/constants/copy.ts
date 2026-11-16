@@ -151,8 +151,8 @@ export const copy = {
         "No pierdas un cliente porque nadie [contestó.]",
       ),
       lead: s(
-        "We help clinics, restaurants and local businesses across Central Florida answer every call and message, fill their calendars, and get found first — in English and in Spanish.",
-        "Ayudamos a clínicas, restaurantes y negocios locales de toda Florida Central a contestar cada llamada y cada mensaje, llenar su agenda y aparecer primero — en inglés y en español.",
+        "We help clinics, restaurants and local businesses across Central Florida answer every call and message, fill their calendars, and get found first — so the business keeps growing. In English and in Spanish.",
+        "Ayudamos a clínicas, restaurantes y negocios locales en Florida Central a contestar cada llamada y mensaje, llenar su agenda y aparecer primero en las búsquedas — para que el negocio siga creciendo. En inglés y en español.",
       ),
       cta: s("Get my free audit", "Quiero mi auditoría gratis"),
       secondary: s("See how it works", "Ver cómo funciona"),
@@ -196,6 +196,12 @@ export const copy = {
           "Detrás de todo: la IA contesta, agenda y hace seguimiento — mientras tú atiendes tu negocio.",
         ),
       ],
+      activity: [
+        s("Incoming call…", "Llamada entrante…"),
+        s("Answered · English & Spanish", "Contestado · Inglés y español"),
+        s("Table booked", "Mesa reservada"),
+        s("AI handling follow-ups", "La IA gestiona los seguimientos"),
+      ],
     },
 
     pain: {
@@ -205,6 +211,7 @@ export const copy = {
         "Most lost business does not announce itself. It quietly books somewhere else.",
         "La mayoría de los clientes perdidos no avisan. Simplemente reservan en otro lado.",
       ),
+      after: s("It quietly books with you.", "Simplemente reservan contigo."),
       items: [
         {
           title: s("It is 7:40 p.m. and the phone rings.", "Son las 7:40 p.m. y suena el teléfono."),
